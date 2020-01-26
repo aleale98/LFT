@@ -19,7 +19,7 @@ public class C {
                 case 1:
                     if(Character.isDigit(c) && Integer.parseInt(String.valueOf(c))%2==1){
                         state=2;
-                    }else if(((c>='a'&&c<='k')||(c>='A'&&c<='K'))||c==' '){
+                    }else if(((c>='a'&&c<='k')||(c>='A'&&c<='K'))){
                         state=3;
                     }else{
                         state=-1;
