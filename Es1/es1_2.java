@@ -16,7 +16,7 @@ public class B {
                     }
                     break;
                 case 1:
-                    if((c>='a'&& c<='z')||(c>='0'&&c<'9')){
+                    if((c>='a'&& c<='z')||(c>='0'&&c<'9')||c=='_'){
                         state=1;
                     }else{
                         state=-1;
