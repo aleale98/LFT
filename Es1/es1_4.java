@@ -6,6 +6,7 @@ public class es1_4 {
 
         while(state >= 0 && i < s.length()) {
             final char ch = s.charAt(i++);
+            char upperCh;
 
             switch (state) {
                 case 0:
@@ -22,7 +23,7 @@ public class es1_4 {
                 case 1:
                     if(Character.isDigit(ch) && Character.getNumericValue(ch) % 2 != 0)
                         state = 2;
-                    else if(ch >= 'A' && ch <= 'K')
+                    else if(ch >= 'A' && ch <= 'K' || ch>='a' && ch<='k')
                         state = 5;
                     else if(Character.isWhitespace(ch))
                         state = 3;
@@ -33,7 +34,7 @@ public class es1_4 {
                 case 2:
                     if(Character.isDigit(ch) && Character.getNumericValue(ch) % 2 == 0)
                         state = 1;
-                    else if(ch >= 'L' && ch <= 'Z')
+                    else if(ch >= 'L' && ch <= 'Z' || ch>='l' && ch<='z')
                         state = 5;
                     else if(Character.isWhitespace(ch))
                         state = 4;
@@ -42,14 +43,14 @@ public class es1_4 {
                     break;
 
                 case 3:
-                    if(ch >= 'A' && ch <= 'K')
+                    if(ch >= 'A' && ch <= 'K' || ch>='a' && ch<='k')
                         state = 5;
                     else if((ch >= 'L' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || Character.isDigit(ch))
                         state = -1;
                     break;
 
                 case 4:
-                    if(ch >= 'L' && ch <= 'Z')
+                    if(ch >= 'L' && ch <= 'Z' || ch>='l' && ch<='z')
                         state = 5;
                     else if((ch >= 'A' && ch <= 'K') || (ch >= 'a' && ch <= 'z') || Character.isDigit(ch))
                         state = -1;
@@ -60,14 +61,14 @@ public class es1_4 {
                         state = 5;
                     else if(Character.isWhitespace(ch))
                         state = 6;
-                    else if((ch >= 'A' && ch <= 'Z') || Character.isDigit(ch))
+                    else if(((ch >= 'A' && ch <= 'Z') || (ch>='a' && ch<='z')) || Character.isDigit(ch))
                         state = -1;
                     break;
 
                 case 6:
-                    if(ch >= 'A' && ch <= 'Z')
+                    if(ch >= 'A' && ch <= 'Z' || ch>='a' && ch<='z')
                         state = 5;
-                    else if((ch >= 'a' && ch <= 'z') || Character.isDigit(ch))
+                    else if(Character.isDigit(ch))
                         state = -1;
                     break;
             }
