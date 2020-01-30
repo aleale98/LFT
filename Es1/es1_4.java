@@ -27,7 +27,7 @@ public class es1_4 {
                         state = 5;
                     else if(Character.isWhitespace(ch))
                         state = 3;
-                    else if((ch >= 'L' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'))
+                    else
                         state = -1;
                     break;
 
@@ -38,21 +38,25 @@ public class es1_4 {
                         state = 5;
                     else if(Character.isWhitespace(ch))
                         state = 4;
-                    else if((ch >= 'A' && ch <= 'K') || (ch >= 'a' && ch <= 'z'))
+                    else
                         state = -1;
                     break;
 
                 case 3:
                     if(ch >= 'A' && ch <= 'K' || ch>='a' && ch<='k')
                         state = 5;
-                    else if((ch >= 'L' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || Character.isDigit(ch))
+                    else if(ch==' ')
+                        state=3;
+                    else
                         state = -1;
                     break;
 
                 case 4:
                     if(ch >= 'L' && ch <= 'Z' || ch>='l' && ch<='z')
                         state = 5;
-                    else if((ch >= 'A' && ch <= 'K') || (ch >= 'a' && ch <= 'z') || Character.isDigit(ch))
+                    else if(ch==' ')
+                        state=4;
+                    else
                         state = -1;
                     break;
 
@@ -61,19 +65,20 @@ public class es1_4 {
                         state = 5;
                     else if(Character.isWhitespace(ch))
                         state = 6;
-                    else if(((ch >= 'A' && ch <= 'Z') || (ch>='a' && ch<='z')) || Character.isDigit(ch))
+                    else
                         state = -1;
                     break;
 
                 case 6:
                     if(ch >= 'A' && ch <= 'Z' || ch>='a' && ch<='z')
                         state = 5;
-                    else if(Character.isDigit(ch))
+                    else if(ch==' ')
+                        state=6;
+                    else
                         state = -1;
                     break;
             }
         }
-
         return state == 5 || state == 6;
     }
 }
