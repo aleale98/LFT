@@ -7,30 +7,35 @@ public class G {
             final char c = s.charAt(i++);
             switch (state) {
                 case 0:
-                    if (c == 'b')
-                        state = 0;
-                    else if (c == 'a')
-                        state = 1;
+                    if(c=='a')
+                        state=1;
+                    else if(c=='b')
+                        state=0;
                     else
-                        state = -1;
+                        state=-1;
                     break;
                 case 1:
-                    if (c == 'a')
-                        state = 1;
-                    else if (c == 'b')
-                        state = 2;
+                    if(c=='a' || c=='b')
+                        state=2;
                     else
-                        state = -1;
+                        state=-1;
                     break;
                 case 2:
-                    if (c == 'a' || c=='b')
-                        state = 1;
+                    if(c=='a' || c=='b')
+                        state=3;
                     else
-                        state = -1;
-                    break;
+                        state=-1;
+                case 3:
+                    if(c=='a')
+                        state=1;
+                    else if(c=='b')
+                        state=0;
+                    else
+                        state=-1;
+                     
             }
 
         }
-        return state == 1 || state==2;
+        return state == 1 || state==2 || state==3;
     }
 }
