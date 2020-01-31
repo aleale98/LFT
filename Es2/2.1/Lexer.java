@@ -28,6 +28,32 @@ public class Lexer {
         }
     }
 
+    private boolean isValidId(String s){
+        int currIndex=0;
+        boolean valid=false;
+        if(Character.isLetter(s.charAt(currIndex))){
+            currIndex++;
+            valid=true;
+            for(int i=currIndex; i<s.length() && valid; i++){
+                valid=Character.isLetterOrDigit(s.charAt(i));
+            }
+        }
+        return valid;
+    }
+
+    private boolean isValidCostant(String s){
+        int currIndex=0;
+        boolean valid=false;
+        if(Character.isDigit(s.charAt(currIndex))){
+            currIndex++;
+            valid=true;
+            for(int i=currIndex; i<s.length() && valid; i++){
+                valid=Character.isDigit(s.charAt(i));
+            }
+        }
+        return valid;
+    }
+
     public Token lexical_scan(BufferedReader br) {
         while (peek == ' ' || peek == '\t' || peek == '\n' || peek == '\r') {
             if (peek == '\n') line++;
@@ -151,7 +177,8 @@ public class Lexer {
                         case "read":
                             return Word.read;
                     }
-                    if(id.matches("[a-zA-Z][a-zA-Z0-9]*")){
+					//potevo usare anche id.matches("[a-zA-Z][a-zA-Z0-9]*");
+                    if(isValidId(id)){
                         return new Word(Tag.ID, id);
                     }else{
                         System.err.println("Invalid keyword or identifier");
@@ -163,7 +190,8 @@ public class Lexer {
                         num += peek;
                         readch(br);
                     } while (Character.isDigit(peek));
-                    if (num.matches("0|[1-9][0-9]*")) {
+					//potevo usare anche num.matches("0|[1-9][0-9]*") passando l'espressione regolare
+                    if (isValidCostant(num)) {
                         return new NumberTok(num);
                     } else {
                         System.err.println("Not valid number: " + num);
