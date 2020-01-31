@@ -28,6 +28,12 @@ public class F {
                     else
                         state=-1;
                     break;
+                case 3:
+                    if(c=='a' || c=='b'){
+                        state=3;
+                    }else{
+                        state=-1;
+                    }
             }
         }
         return state==3;
