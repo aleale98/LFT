@@ -16,6 +16,8 @@ public class I {
                 case 1:
                     if(c=='*')
                         state=2;
+                    else if(c=='a')
+                        state=0;
                     else
                         state=-1;
                     break;
