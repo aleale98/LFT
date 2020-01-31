@@ -27,7 +27,7 @@ public class Lexer {
             peek = (char) -1; // ERROR
         }
     }
-
+	//assumo che un id valido sia generato dalla seguente regex: [a-zA-Z][a-zA-Z0-9]*
     private boolean isValidId(String s){
         int currIndex=0;
         boolean valid=false;
@@ -40,7 +40,7 @@ public class Lexer {
         }
         return valid;
     }
-
+	//assumo che una costante valida sia generata dalla seguente regex: 0|[1-9][0-9]*
     private boolean isValidCostant(String s){
         int currIndex=0;
         boolean valid=false;
