@@ -1,5 +1,4 @@
-//1.8
-public class G {
+public class es1_8 {
     public static boolean scan(String s) {
         int state = 0;
         int i = 0;
@@ -7,35 +6,41 @@ public class G {
             final char c = s.charAt(i++);
             switch (state) {
                 case 0:
-                    if(c=='a')
-                        state=1;
-                    else if(c=='b')
-                        state=0;
+                    if (c == 'a')
+                        state = 1;
+                    else if (c == 'b')
+                        state = 0;
                     else
-                        state=-1;
+                        state = -1;
                     break;
                 case 1:
-                    if(c=='a' || c=='b')
-                        state=2;
+                    if (c == 'a')
+                        state = 1;
+                    else if (c == 'b')
+                        state = 2;
                     else
-                        state=-1;
+                        state = -1;
                     break;
                 case 2:
-                    if(c=='a' || c=='b')
-                        state=3;
+                    if (c == 'a')
+                        state = 1;
+                    else if (c == 'b')
+                        state = 3;
                     else
-                        state=-1;
+                        state = -1;
+					break;
                 case 3:
-                    if(c=='a')
-                        state=1;
-                    else if(c=='b')
-                        state=0;
+                    if (c == 'b')
+                        state = 0;
+                    else if (c == 'a')
+                        state = 3;
                     else
-                        state=-1;
-                     
+                        state = -1;
+					break;
+
             }
 
         }
-        return state == 1 || state==2 || state==3;
+        return state == 1 || state == 3;
     }
 }
