@@ -163,6 +163,7 @@ public class Lexer {
                         case "read":
                             return Word.read;
                     }
+					//uso questo metodo per semplicità
                     if (id.matches("([a-zA-Z]|(_(_)*[a-zA-Z0-9]))([a-zA-z0-9|_])*")) {
                         return new Word(Tag.ID, id);
                     } else {
