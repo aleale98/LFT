@@ -179,11 +179,17 @@ public class Translator {
 
     private void exprp() {
         switch (look.tag) {
+			/*
+				exprp --> + exprlist {emit(iadd)}
+			*/
             case '+':
                 match('+');
                 exprlist();
                 code.emit(OpCode.iadd);
                 break;
+				/*
+					exprp --> -expr expr {emit(isub)}
+				*/
             case '-':
                 match('-');
                 expr();
