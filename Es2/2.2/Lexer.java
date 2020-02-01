@@ -20,6 +20,33 @@ public class Lexer {
     public static int line = 1;
     private char peek = ' ';
 
+    //assumo che una costante valida sia generata dalla seguente regex: 0|[1-9][0-9]*
+    private boolean isValidCostant(String s){
+        int currIndex=0;
+        boolean valid=false;
+        if(Character.isDigit(s.charAt(currIndex))){
+            currIndex++;
+            valid=true;
+            for(int i=currIndex; i<s.length() && valid; i++){
+                valid=Character.isDigit(s.charAt(i));
+            }
+        }
+        return valid;
+    }
+
+    private boolean isValidId(String s){
+        boolean valid=false;
+        int currentIndex=0;
+        if(Character.isLetter(s.charAt(currentIndex)) || s.charAt(currentIndex)=='_'){
+            currentIndex++;
+            valid = true;
+            for(int i=0; i<s.length() && valid; i++){
+                valid=Character.isLetterOrDigit(s.charAt(i)) || s.charAt(i)=='_';
+            }
+        }
+        return valid;
+    }
+
     private void readch(BufferedReader br) {
         try {
             peek = (char) br.read();
@@ -151,7 +178,7 @@ public class Lexer {
                         case "read":
                             return Word.read;
                     }
-                    if(id.matches("([a-zA-Z]|(_(_)*[a-zA-Z0-9]))([a-zA-z0-9|_])*")){
+                    if(isValidId(id)){
                         return new Word(Tag.ID, id);
                     }else{
                         System.err.println("Invalid keyword or identifier");
@@ -163,7 +190,7 @@ public class Lexer {
                         num += peek;
                         readch(br);
                     } while (Character.isDigit(peek));
-                    if (num.matches("0|[1-9][0-9]*")) {
+                    if (isValidCostant(num)) {
                         return new NumberTok(num);
                     } else {
                         System.err.println("Not valid number: " + num);

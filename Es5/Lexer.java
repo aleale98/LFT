@@ -4,6 +4,34 @@ public class Lexer {
     private static int line = 1;
     private char peek = ' ';
 
+
+
+    private boolean isValidCostant(String s){
+        int currIndex=0;
+        boolean valid=false;
+        if(Character.isDigit(s.charAt(currIndex))){
+            currIndex++;
+            valid=true;
+            for(int i=currIndex; i<s.length() && valid; i++){
+                valid=Character.isDigit(s.charAt(i));
+            }
+        }
+        return valid;
+    }
+
+    private boolean isValidId(String s){
+        boolean valid=false;
+        int currentIndex=0;
+        if(Character.isLetter(s.charAt(currentIndex)) || s.charAt(currentIndex)=='_'){
+            currentIndex++;
+            valid = true;
+            for(int i=0; i<s.length() && valid; i++){
+                valid=Character.isLetterOrDigit(s.charAt(i)) || s.charAt(i)=='_';
+            }
+        }
+        return valid;
+    }
+	
     private void readch(BufferedReader br) {
         try {
             peek = (char) br.read();
@@ -19,7 +47,7 @@ public class Lexer {
         }
 
         switch (peek) {
-            // gestisco i casi di (, ), {, }, +, -, *, /, ; 
+            // ... gestire i casi di (, ), {, }, +, -, *, /, ; ... //
             case '!':
                 peek = ' ';
                 return Token.not;
@@ -47,8 +75,8 @@ public class Lexer {
             case '/':
                 readch(br);
                 /*
-                 * Controlla il commento su una singola linea. Ignora ogni carattere dopo // fino alla nuova riga 
-				 *	Poi chiama ricorsivamente il metodo per continuare l'analisi.
+                 * check comment on one line. Ignore every character after // and until a new line
+                 * Then recursively call the method to carry on the analysis.
                  * */
                 if (peek == '/') {
                     do {
@@ -57,8 +85,8 @@ public class Lexer {
                     return lexical_scan(br);
                 } else if (peek == '*') {
                     /*
-                    * Legge la sequenza /*. Poi legge tutti i caratteri presenti sino alla sequenza di chiusura
-                    *La logica utilizzata è simile a quella di un DFA
+                    * Read the /* sequence. Then read every character until the closure sequence is read.
+                    The logic is similar to the DFA.
                      */
                     int commentEnded = 0;
                     do {
@@ -69,13 +97,13 @@ public class Lexer {
                             commentEnded--;
                     } while (commentEnded != 2 && peek != (char) Tag.EOF);
                     peek = ' ';
-                    //Se il commento è stato chiuso correttamente, richiama ricorsivamente il metodo per continuare ad analizzare il codice
+                    //If the comment is correctly closed, then call again the method to continue scanning the code
                     if (commentEnded == 2) {
                         return lexical_scan(br);
                     }
-                    //Il commento non è stato chiuso correttamente
+                    //The comment hasn't been correctly closed
                     else {
-                        System.err.println("Commento multilinea non chiuso correttamente");
+                        System.err.println("Multi-line comment uncorrectly closed");
                         return null;
                     }
                 } else {
@@ -122,7 +150,6 @@ public class Lexer {
                     peek = ' ';
                     return Word.ge;
                 } else {
-					//Non svuoto peek per le stesse motivazioni di sopra
                     return Word.gt;
                 }
             case '=':
@@ -131,22 +158,19 @@ public class Lexer {
                     peek = ' ';
                     return Word.eq;
                 } else {
-					//Non svuoto peek per le stesse motivazioni di sopra
                     return Word.assign;
                 }
             case (char) -1:
-			//restituisco il tag relativo alla fine del file
                 return new Token(Tag.EOF);
             default:
-			//gestisco il caso degli identificatori
                 if (Character.isLetter(peek)) {
                     String id = "";
                     boolean b = true;
-					//leggo qualsiasi cosa fino al primo spazio che incontro
                     while (Character.isDigit(peek) || Character.isLetter(peek) || peek == '_') {
                         id += peek;
                         readch(br);
                     }
+                    id = id.trim();
                     switch (id) {
                         case "cond":
                             return Word.cond;
@@ -167,23 +191,20 @@ public class Lexer {
                         case "read":
                             return Word.read;
                     }
-					//Se non è una parola chiave, guardo che sia generato da questa espressione regolare
-                    if (id.matches("([a-zA-Z]|(_(_)*[a-zA-Z0-9]))([a-zA-z0-9|_])*")) {
+					//uso questo metodo per semplicità
+                    if (isValidId(id)) {
                         return new Word(Tag.ID, id);
                     } else {
                         System.err.println("Invalid keyword or identifier");
                         return null;
                     }
                 } else if (Character.isDigit(peek)) {
-					//Caso delle costanti numeriche
                     String num = "";
                     do {
                         num += peek;
                         readch(br);
                     } while (Character.isDigit(peek));
-					//Se la stringa è composta o da un solo zero o da un numero arbitrario di cifre e NON comincia per 0, restituisco
-					//il token relativo al numero
-                    if (num.matches("0|[1-9][0-9]*")) {
+                    if (isValidCostant(num)) {
                         return new NumberTok(num);
                     } else {
                         System.err.println("Not valid number: " + num);
@@ -197,7 +218,20 @@ public class Lexer {
         }
     }
 
-    public static int getLine() {
-        return line;
+    public static void main(String[] args) {
+        Lexer lex = new Lexer();
+        String path = "/Users/alessio/Desktop/test.txt"; // il percorso del file da leggere
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(path));
+            Token tok;
+            do {
+                tok = lex.lexical_scan(br);
+                System.out.println("Scan: " + tok);
+            } while (tok.tag != Tag.EOF);
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 }
