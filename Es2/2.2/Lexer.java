@@ -21,7 +21,7 @@ public class Lexer {
     private char peek = ' ';
 
     //assumo che una costante valida sia generata dalla seguente regex: 0|[1-9][0-9]*
-    private boolean isValidCostant(String s){
+    private boolean isValidConstant(String s){
         int currIndex=0;
         boolean valid=false;
         if(Character.isDigit(s.charAt(currIndex))){
@@ -190,7 +190,7 @@ public class Lexer {
                         num += peek;
                         readch(br);
                     } while (Character.isDigit(peek));
-                    if (isValidCostant(num)) {
+                    if (isValidConstant(num)) {
                         return new NumberTok(num);
                     } else {
                         System.err.println("Not valid number: " + num);

@@ -6,7 +6,7 @@ public class Lexer {
 
 
 
-    private boolean isValidCostant(String s){
+    private boolean isValidConstant(String s){
         int currIndex=0;
         boolean valid=false;
         if(Character.isDigit(s.charAt(currIndex))){
@@ -204,7 +204,7 @@ public class Lexer {
                         num += peek;
                         readch(br);
                     } while (Character.isDigit(peek));
-                    if (isValidCostant(num)) {
+                    if (isValidConstant(num)) {
                         return new NumberTok(num);
                     } else {
                         System.err.println("Not valid number: " + num);
