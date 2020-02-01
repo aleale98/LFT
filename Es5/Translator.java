@@ -30,6 +30,9 @@ public class Translator {
         } else error("syntax error");
     }
 
+	/*
+		prog --> {stat.next=newLabel()}stat{emit(stat.next)}EOF
+	*/
     public void prog() {
         switch (look.tag) {
             case '(':
