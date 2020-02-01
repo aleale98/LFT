@@ -29,7 +29,11 @@ public class Translator {
             if (look.tag != Tag.EOF) move();
         } else error("syntax error");
     }
-
+	
+	/*
+		prog --> {stat.next=newLabel()}stat{emit(stat.next)}EOF
+		
+	*/
     public void prog() {
         switch (look.tag) {
             case '(':
@@ -177,22 +181,34 @@ public class Translator {
 
     private void exprp() {
         switch (look.tag) {
+			/*
+				exprp --> + exprlist {emit(iadd)}
+			*/
             case '+':
                 match('+');
                 exprlist();
                 code.emit(OpCode.iadd);
                 break;
+			/*
+				exprp --> - expr expr {emit(isub)}
+			*/
             case '-':
                 match('-');
                 expr();
                 expr();
                 code.emit(OpCode.isub);
                 break;
+			/*
+				exprp --> * exprlist {emit(imul)}
+			*/
             case '*':
                 match('*');
                 exprlist();
                 code.emit(OpCode.imul);
                 break;
+			/*
+				exprp --> / expr expr {emit(idiv)}
+			*/
             case '/':
                 match('/');
                 expr();
@@ -205,6 +221,9 @@ public class Translator {
     }
 
     private void exprlist() {
+		/*
+			exprlist --> expr exprlistp
+		*/
         switch (look.tag) {
             case Tag.NUM:
             case Tag.ID:
@@ -216,6 +235,10 @@ public class Translator {
                 error(look.toString());
         }
     }
+	
+	/*
+		exprlistp --> expr exprlistp | epsilon
+    */
 
     private void exprlistp() {
         switch (look.tag) {
@@ -231,12 +254,13 @@ public class Translator {
                 error(look.toString());
         }
     }
-
+	/*
+		bexpr --> (bexprp)
+	*/
     private void bexpr(int lnext_true, int lnext_false) {
         switch (look.tag) {
             case '(':
                 match('(');
-                int next = code.newLabel();
                 bexprp(lnext_true, lnext_false);
                 match(')');
                 break;
@@ -248,6 +272,9 @@ public class Translator {
     private void bexprp(int lnext_false, int lnext_true) {
         OpCode opCode = OpCode.if_icmpeq;
         switch (look.tag) {
+			/*
+				bexprp --> RELOP expr expr
+			*/
             case Tag.RELOP:
                 switch (((Word) look).lexeme) {
                     case "<":
@@ -269,6 +296,10 @@ public class Translator {
                         error(look.toString());
                 }
                 match(Tag.RELOP);
+		        expr();
+		        expr();
+		        code.emit(opCode, lnext_true);
+		        code.emit(OpCode.GOto, lnext_false);
                 break;
 				case Tag.AND:
 					int and_true=code.newLabel();
@@ -285,18 +316,14 @@ public class Translator {
 					code.emitlabel(or_false);
 					bexpr(lnext_true, lnext_false);
 					break;
-				case Tag.NEG:
-					match(Tag.NEG);
+				case Tag.NOT:
+					match(Tag.NOT);
 					bexpr(lnext_false, lnext_true);
 					break;
 				break;
             default:
                 error(look.toString());
         }
-        expr();
-        expr();
-        code.emit(opCode, lnext_true);
-        code.emit(OpCode.GOto, lnext_false);
     }
 
     private void elseopt(int lnext_false, int end) {

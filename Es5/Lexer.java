@@ -4,7 +4,9 @@ public class Lexer {
     private static int line = 1;
     private char peek = ' ';
 
-
+	public static int getLine(){
+		return line;
+	}
 
     private boolean isValidConstant(String s){
         int currIndex=0;
