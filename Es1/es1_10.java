@@ -21,7 +21,7 @@ public class es1_10 {
                     }
                     break;
                 case 2:
-                    if (c == 'a') {
+                    if (c == 'a' || c=='/') {
                         state = 4;
                     } else if (c == '*') {
                         state = 3;
@@ -32,7 +32,7 @@ public class es1_10 {
                 case 3:
                     if (c == '*') {
                         state = 3;
-                    } else if (c == 'c') {
+                    } else if (c == 'a') {
                         state = 4;
                     } else if (c == '/') {
                         state = 5;
@@ -41,7 +41,7 @@ public class es1_10 {
                     }
                     break;
                 case 4:
-                    if (c == 'c' || c == '*') {
+                    if (c == 'a' || c == '/') {
                         state = 4;
                     } else if (c == '*') {
                         state = 3;
@@ -50,7 +50,7 @@ public class es1_10 {
                     }
                     break;
                 case 5:
-                    if (c == '/' || c == 'c' || c == '*') {
+                    if (c == '/' || c == 'a' || c == '*') {
                         state = -1;
                     }
                     break;
