@@ -89,14 +89,20 @@ public class Translator {
                     error("Error in grammar (stat) after read with " + look);
                 break;
 				/*
-					statp --> COND{ lnext_false=newLabel(); lnext_l=newLabel()}bexpr{emit(lnext_true)}
-							   stat {lnext_true=newLabel()}elseOpt
+					statp --> COND{ lnext_false=newLabel();lnext_true=newLabel()}bexpr{emit(lnext_true)}
+							   stat {lnext_l=newLabel(), lnext_false}elseOpt
+					
+					creo le etichette per il caso true e per il caso false. Creo inoltre l'etichetta lnext_l 
+					che uso per indicare la fine del caso else. Non è utilizzata direttamente qui per qualche elaborazione
+					ma serve solo per essere passata come parametro al metodo elseopt e indica il punto a cui saltare 
+					quando ho finito di eseguire il codice dell'else.
 				*/
             case Tag.COND:
-                lnext_true = code.newLabel();
-                lnext_false = code.newLabel();
+                
                 int lnext_l = code.newLabel();
                 match(Tag.COND);
+                lnext_true = code.newLabel();
+                lnext_false = code.newLabel();
                 bexpr(lnext_true, lnext_false);
                 code.emitLabel(lnext_true);
                 stat();
