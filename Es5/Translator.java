@@ -98,21 +98,28 @@ public class Translator {
 					quando ho finito di eseguire il codice dell'else.
 				*/
             case Tag.COND:
-                
-                int lnext_l = code.newLabel();
                 match(Tag.COND);
                 lnext_true = code.newLabel();
                 lnext_false = code.newLabel();
                 bexpr(lnext_true, lnext_false);
                 code.emitLabel(lnext_true);
                 stat();
+				int lnext_l = code.newLabel();
                 elseopt(lnext_false, lnext_l);
                 break;
+				
+				/*
+					statp --> {btrue=newLabel()}WHILE {lnext_true=newLabel(); lnext_false=newLabel() emit(btrue)}bexpr {emit(lnest_true)}
+					stat{emit(goto btrue); emit(lnext_false)}
+					
+					L'idea alla base è che fino a quando l'espressione booleana è vera, torno sempre all'inizio del ciclo.
+					Utilizzo quindi btrue per indicare l'etichetta iniziale del corpo del ciclo.
+				*/
             case Tag.WHILE:
-                int btrue = code.newLabel();
+				int btrue = code.newLabel();
+                match(Tag.WHILE);
                 lnext_true = code.newLabel();
                 lnext_false = code.newLabel();
-                match(Tag.WHILE);
                 code.emitLabel(btrue);
                 bexpr(lnext_true, lnext_false);
                 code.emitLabel(lnext_true);
@@ -120,6 +127,9 @@ public class Translator {
                 code.emit(OpCode.GOto, btrue);
                 code.emitLabel(lnext_false);
                 break;
+				/*
+					statp --> DO statlist
+				*/
             case Tag.DO:
                 match(Tag.DO);
                 statlist();
