@@ -50,7 +50,10 @@ public class Translator {
                 error(look.toString());
         }
     }
-
+	
+	/*
+		stat --> (statp)
+	*/
     public void stat() {
         switch (look.tag) {
             case '(':
@@ -68,6 +71,9 @@ public class Translator {
         int lnext_false;
         int read_id_addr;
         switch (look.tag) {
+			/*
+				statp --> READ ID {emit(istore(&ID))}
+			*/
             case Tag.READ:
                 match(Tag.READ);
                 if (look.tag == Tag.ID) {
@@ -82,6 +88,10 @@ public class Translator {
                 } else
                     error("Error in grammar (stat) after read with " + look);
                 break;
+				/*
+					statp --> COND{ lnext_false=newLabel(); lnext_l=newLabel()}bexpr{emit(lnext_true)}
+							   stat {lnext_true=newLabel()}elseOpt
+				*/
             case Tag.COND:
                 lnext_true = code.newLabel();
                 lnext_false = code.newLabel();
