@@ -25,7 +25,12 @@ public class Parser {
             if (look.tag != Tag.EOF) move();
         } else error("syntax error");
     }
-
+	/*
+		start --> expr EOF
+		
+		guida(start --> expr EOF)={(, NUM}
+		
+	*/
     public void start() {
         switch (look.tag) {
             case '(':
@@ -37,7 +42,10 @@ public class Parser {
                 error(look.toString());
         }
     }
-
+	/*
+		expr --> term exprp
+		guida(expr --> term exprp)={(, NUM}
+	*/
 	private void expr() {
 	        switch(look.tag) {
 	            case '(':
@@ -52,16 +60,28 @@ public class Parser {
 
     private void exprp() {
         switch (look.tag) {
+			/*
+				exprp --> + term exprp
+				guida(exprp --> + term exprp)={+}
+			*/
             case '+':
                 match('+');
                 term();
                 exprp();
                 break;
+			/*
+				exprp --> - term exprp
+				guida(exprp --> - term exprp)={-}
+			*/	
             case '-':
                 match('-');
                 term();
                 exprp();
                 break;
+			/*
+				exprp --> epsilon
+				guida(exprp --> epsilon)={EOF, )}
+			*/
             case ')':
             case Tag.EOF:
                 break;
@@ -70,7 +90,10 @@ public class Parser {
                 break;
         }
     }
-
+	/*
+		term --> fact termp
+		guida(term --> fact termp)={(, NUM}
+	*/
     private void term() {
         switch (look.tag) {
             case '(':
@@ -86,16 +109,28 @@ public class Parser {
 
     private void termp() {
         switch (look.tag) {
+			/*
+				termp --> * fact termp
+				guida(termp --> * fact termp)={*}
+			*/
             case '*':
                 match('*');
                 fact();
                 termp();
                 break;
+			/*
+				termp --> / fact termp
+				guida(termp --> / fact termp)={/}
+			*/
             case '/':
                 match('/');
                 fact();
                 termp();
                 break;
+			/*
+				termp --> epsilon
+				guida(termp --> epsilon)={+, -, ), EOF}
+			*/
             case '+':
             case '-':
             case ')':
@@ -109,11 +144,19 @@ public class Parser {
 
     private void fact() {
         switch (look.tag) {
+			/*
+				fact --> (expr)
+				guida(fact --> (expr))={(}
+			*/
             case '(':
                 match('(');
                 expr();
                 match(')');
                 break;
+			/*
+				fact --> NUM
+				guida(fact --> NUM)={NUM}
+			*/
             case Tag.NUM:
                 match(Tag.NUM);
                 break;
