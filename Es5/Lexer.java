@@ -4,10 +4,10 @@ public class Lexer {
     private static int line = 1;
     private char peek = ' ';
 
-	public static int getLine(){
-		return line;
-	}
 
+    public static int getLine(){
+        return line;
+    }
     private boolean isValidConstant(String s){
         int currIndex=0;
         boolean valid=false;
@@ -33,7 +33,7 @@ public class Lexer {
         }
         return valid;
     }
-	
+
     private void readch(BufferedReader br) {
         try {
             peek = (char) br.read();
@@ -83,7 +83,7 @@ public class Lexer {
                 if (peek == '/') {
                     do {
                         readch(br);
-                    } while (peek != '\n' && peek != Tag.EOF);
+                    } while (peek != '\n' && peek != Tag.EOF && peek!='\uFFFF');
                     return lexical_scan(br);
                 } else if (peek == '*') {
                     /*
@@ -193,7 +193,7 @@ public class Lexer {
                         case "read":
                             return Word.read;
                     }
-					//uso questo metodo per semplicità
+                    //uso questo metodo per semplicità
                     if (isValidId(id)) {
                         return new Word(Tag.ID, id);
                     } else {

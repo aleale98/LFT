@@ -8,10 +8,20 @@ public class Lexer {
     public static int getLine(){
         return line;
     }
+	
+	/*
+		Metodo per controllare la validità delle costanti.
+		Se la stringa inizia con zero setto valid a true e non eseguo il ramo
+		dell'else if. Se la stringa non inizia con zero, controllo che inizi con un numero
+		e se inizia con un numero controllo che tutti gli altri caratteri siano solo
+		numeri. Non contemplo le costanti con virgola.
+	*/
     private boolean isValidConstant(String s){
         int currIndex=0;
         boolean valid=false;
-        if(Character.isDigit(s.charAt(currIndex))){
+		if(s.charAt(currIndex)=='0'){
+			valid=true;
+		}else if(Character.isDigit(s.charAt(currIndex))){
             currIndex++;
             valid=true;
             for(int i=currIndex; i<s.length() && valid; i++){
@@ -21,6 +31,11 @@ public class Lexer {
         return valid;
     }
 
+	/*
+		Controllo che la stringa che presumo essere un ID inizi o con una lettera o con un _
+		Se comincia con una lettera o con un _ , allora controllo che tutti i caratteri seguenti
+		siano o lettere o numeri o _ 
+	*/
     private boolean isValidId(String s){
         boolean valid=false;
         int currentIndex=0;
@@ -77,8 +92,9 @@ public class Lexer {
             case '/':
                 readch(br);
                 /*
-                 * check comment on one line. Ignore every character after // and until a new line
-                 * Then recursively call the method to carry on the analysis.
+                 * Controlla il commento su una singola linea. Ignora ogni carattere dopo //
+                 * Dopo chiama ricorsivamente il metodo lexical_scan per continuare
+					l'analisi.
                  * */
                 if (peek == '/') {
                     do {
@@ -87,8 +103,8 @@ public class Lexer {
                     return lexical_scan(br);
                 } else if (peek == '*') {
                     /*
-                    * Read the /* sequence. Then read every character until the closure sequence is read.
-                    The logic is similar to the DFA.
+                    * Legge la sequenza /*. Dopo legge ogni carattere sino a quando non trova la sequenza
+						di chiusura.
                      */
                     int commentEnded = 0;
                     do {
@@ -99,13 +115,14 @@ public class Lexer {
                             commentEnded--;
                     } while (commentEnded != 2 && peek != (char) Tag.EOF);
                     peek = ' ';
-                    //If the comment is correctly closed, then call again the method to continue scanning the code
+                    //Il commento è stato chiuso correttamente. Chiama ricorsivamente il metodo lexical_scan
+					//per continuare ad analizzare il sorgente.
                     if (commentEnded == 2) {
                         return lexical_scan(br);
                     }
-                    //The comment hasn't been correctly closed
+                    //Il commento non è stato chiuso correttamente. Restituisco null.
                     else {
-                        System.err.println("Multi-line comment uncorrectly closed");
+                        System.err.println("Commento multi-linea non chiuso correttamente.");
                         return null;
                     }
                 } else {
@@ -114,14 +131,17 @@ public class Lexer {
             case ';':
                 peek = ' ';
                 return Token.semicolon;
+				/*
+					Se la sintassi dell && è errata, segnalo un errore e restituisco null.
+				*/
             case '&':
                 readch(br);
                 if (peek == '&') {
                     peek = ' ';
                     return Word.and;
                 } else {
-                    System.err.println("Erroneous character"
-                            + " after & : " + peek);
+                    System.err.println("Erroneous character " +
+                            " after &: " + peek);
                     return null;
                 }
             case '|':
@@ -165,6 +185,13 @@ public class Lexer {
             case (char) -1:
                 return new Token(Tag.EOF);
             default:
+			/*
+				Se non ho usato alcun caso prima, mi rimane da verificare o il caso dell'ID/parola chiave 
+				o il caso della costante numerica.
+				Se peek è una lettera allora presumibilmente sto gestendo o una parola chiave o un identificatore.
+				Per cui, fino a quando leggo _, lettere o numeri leggo la stringa. Dopodichè la valido con 
+				il metodo apposta.
+			*/
                 if (Character.isLetter(peek)) {
                     String id = "";
                     boolean b = true;
@@ -172,6 +199,7 @@ public class Lexer {
                         id += peek;
                         readch(br);
                     }
+					//Rimuovo eventuali spazi letti ad inizio o fine stringa
                     id = id.trim();
                     switch (id) {
                         case "cond":
@@ -193,13 +221,19 @@ public class Lexer {
                         case "read":
                             return Word.read;
                     }
-                    //uso questo metodo per semplicità
+					//Se ho un ID valido, restituisco una nuova parola 
                     if (isValidId(id)) {
                         return new Word(Tag.ID, id);
                     } else {
                         System.err.println("Invalid keyword or identifier");
                         return null;
                     }
+					/*
+						Se non ho letto una lettera, allora ho letto un numero. 
+						Leggo quindi tutti i numeri successivi.
+						Dopodichè, con il metodo apposta valido la costante e restituisco un nuovo 
+						NumberTok valorizzato con il numero.
+					*/
                 } else if (Character.isDigit(peek)) {
                     String num = "";
                     do {
