@@ -17,7 +17,10 @@ public class C {
                     }
                     break;
                 case 1:
-                    if(Character.isDigit(c) && Integer.parseInt(String.valueOf(c))%2==1){
+				
+					if(Character.isDigit(c) && Integer.parseInt(String.valueOf(c))%2==0){
+						state=1;
+					} else if(Character.isDigit(c) && Integer.parseInt(String.valueOf(c))%2==1){
                         state=2;
                     }else if(((c>='a'&&c<='k')||(c>='A'&&c<='K'))){
                         state=3;
@@ -26,7 +29,9 @@ public class C {
                     }
                     break;
                 case 2:
-                    if(Character.isDigit(c) && Integer.parseInt(String.valueOf(c))%2==0){
+					if(Character.isDigit(c) && Integer.parseInt(String.valueOf(c))%2==1){
+						state=2;
+					}else if(Character.isDigit(c) && Integer.parseInt(String.valueOf(c))%2==0){
                         state=1;
                     }else if((c>='l' && c<='z')||(c>='L' && c<='Z')){
                         state=3;
@@ -35,8 +40,10 @@ public class C {
                     }
                     break;
                 case 3:
-                    if(Character.isDigit(c)){
+                    if(!(Character.isLetter(c))){
                         state=-1;
+                    }else{
+                    	state=3;
                     }
             }
         }
