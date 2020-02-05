@@ -1,3 +1,4 @@
+//Esercizio 3.2
 import java.io.*;
 
 public class Parser {
@@ -203,7 +204,6 @@ public class Parser {
     }
 
     private void exprlistp(){
-        //System.out.println("exprListP: " + look.tag);
         switch(look.tag){
             case Tag.NUM:
             case Tag.ID:
