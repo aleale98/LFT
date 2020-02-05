@@ -38,10 +38,17 @@ public class Parser {
         }
     }
 
-    private void expr() {
-        term();
-        exprp();
-    }
+	private void expr() {
+	        switch(look.tag) {
+	            case '(':
+	            case Tag.NUM:
+	                term();
+	                exprp();
+	                break;
+	            default:
+	                error(look.toString());
+	        }
+	    }
 
     private void exprp() {
         switch (look.tag) {
