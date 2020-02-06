@@ -1,0 +1,10 @@
+(do
+    (read x)
+    (while (||(== x 1) (> x 1))
+      (do
+	(print x)
+        	)
+        (= x(- x 1))
+      )
+    )
+)

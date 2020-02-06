@@ -37,7 +37,8 @@ public class Translator {
         switch (look.tag) {
             case '(':
                 int lnext_prog = code.newLabel();
-                stat();
+                stat(lnext_prog);
+				System.out.println("LNEXT_PROG "+lnext_prog);
                 code.emitLabel(lnext_prog);
                 match(Tag.EOF);
                 try {
@@ -54,11 +55,11 @@ public class Translator {
 	/*
 		stat --> (statp)
 	*/
-    public void stat() {
+    public void stat(int lnext) {
         switch (look.tag) {
             case '(':
                 match('(');
-                statp();
+                statp(lnext);
                 match(')');
                 break;
             default:
@@ -66,7 +67,7 @@ public class Translator {
         }
     }
 
-    public void statp() {
+    public void statp(int lnext) {
         int lnext_true;
         int lnext_false;
         int read_id_addr;
@@ -89,8 +90,7 @@ public class Translator {
                     error("Error in grammar (stat) after read with " + look);
                 break;
 				/*
-					statp --> COND{ lnext_false=newLabel();lnext_true=newLabel()}bexpr{emit(lnext_true)}
-							   stat {lnext_l=newLabel(), lnext_false}elseOpt
+					
 					
 					creo le etichette per il caso true e per il caso false. Creo inoltre l'etichetta lnext_l 
 					che uso per indicare la fine del caso else. Non è utilizzata direttamente qui per qualche elaborazione
@@ -98,19 +98,18 @@ public class Translator {
 					quando ho finito di eseguire il codice dell'else.
 				*/
             case Tag.COND:
-                match(Tag.COND);
-                lnext_true = code.newLabel();
-                lnext_false = code.newLabel();
-                bexpr(lnext_true, lnext_false);
-                code.emitLabel(lnext_true);
-                stat();
-				int lnext_l = code.newLabel();
-                elseopt(lnext_false, lnext_l);
-                break;
+				lnext_true = code.newLabel();
+				lnext_false = code.newLabel();
+				int lnext_end = code.newLabel();
+				match(Tag.COND);
+				bexpr(lnext_true, lnext_false);
+				code.emitLabel(lnext_true);
+				stat(lnext);
+				elseopt(lnext_false, lnext_end);
+    			break;
 				
 				/*
-					statp --> {btrue=newLabel()}WHILE {lnext_true=newLabel(); lnext_false=newLabel() emit(btrue)}bexpr {emit(lnest_true)}
-					stat{emit(goto btrue); emit(lnext_false)}
+					
 					
 					L'idea alla base è che fino a quando l'espressione booleana è vera, torno sempre all'inizio del ciclo.
 					Utilizzo quindi btrue per indicare l'etichetta iniziale del corpo del ciclo.
@@ -118,21 +117,22 @@ public class Translator {
             case Tag.WHILE:
 				int btrue = code.newLabel();
                 match(Tag.WHILE);
-                lnext_true = code.newLabel();
-                lnext_false = code.newLabel();
+                int while_true = code.newLabel();
+                int while_false = lnext;
                 code.emitLabel(btrue);
-                bexpr(lnext_true, lnext_false);
-                code.emitLabel(lnext_true);
-                stat();
+                bexpr(while_true, while_false);
+                code.emitLabel(while_true);
+                stat(lnext );
                 code.emit(OpCode.GOto, btrue);
-                code.emitLabel(lnext_false);
+                code.emitLabel(while_false);
                 break;
 				/*
 					statp --> DO statlist
 				*/
             case Tag.DO:
                 match(Tag.DO);
-                statlist();
+				int s_next= code.newLabel();
+                statlist(s_next);
                 break;
             case Tag.PRINT:
                 match(Tag.PRINT);
@@ -154,22 +154,24 @@ public class Translator {
         }
     }
 
-    private void statlist() {
+    private void statlist(int lnext) {
         switch (look.tag) {
             case '(':
-                stat();
-                statlistp();
+                stat(lnext);
+				int statlistp_next= code.newLabel();
+                statlistp(statlistp_next);
                 break;
             default:
                 error(look.toString());
         }
     }
-
-    private void statlistp() {
+	//nuova etichetta per statlistp
+    private void statlistp(int lnext) {
         switch (look.tag) {
             case '(':
-                stat();
-                statlistp();
+                stat(lnext);
+				int new_label=code.newLabel();
+                statlistp(new_label);
                 break;
             case ')':
                 break;
@@ -348,12 +350,16 @@ public class Translator {
     private void elseopt(int lnext_false, int end) {
         switch (look.tag) {
             case '(':
-
                 match('(');
-                match(Tag.ELSE);
+				match(Tag.ELSE);
                 code.emit(OpCode.GOto, end);
-                code.emitLabel(lnext_false);
-                stat();
+				 code.emitLabel(lnext_false);
+				
+				System.out.println("LNEXT_FALSE "+lnext_false);
+               
+				System.out.println("END "+end);
+                stat(end);
+				System.out.println("STO EMETTENDO END");
                 code.emitLabel(end);
                 match(')');
                 break;
