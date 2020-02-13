@@ -1,5 +1,13 @@
-//1.9
-public class H {
+
+public class es1_9 {
+	
+	/*
+		Progettare e implementare un DFA che riconosca il linguaggio di stringhe che contengono il tuo nome 
+		e tutte le stringhe ottenute dopo la sostituzione di un carattere del nome con un altro qualsiasi. 
+		Ad esempio, nel caso di uno studente che si chiama Paolo, il DFA deve accettare la stringa “Paolo” 
+		(cioe` il nome scritto correttamente), ma anche le stringhe “Pjolo”, “caolo”, “Pa%lo”, “Paola” e “Parlo” 
+		(il nome dopo la sostituzione di un carattere), ma non “Eva”, “Perro”, “Pietro” oppure “P*o*o”.
+	*/
     public static boolean scan(String s){
         int state = 0;
         int i = 0;
@@ -107,4 +115,18 @@ public class H {
         }
         return state==7;
     }
+	
+	public static void main(String[] args){
+		System.out.println(es1_9.scan("alessio"));
+		System.out.println(es1_9.scan("blessio"));
+		System.out.println(es1_9.scan("akessio"));
+		System.out.println(es1_9.scan("al*ssio"));
+		System.out.println(es1_9.scan("ale!sio"));
+		System.out.println(es1_9.scan("ales=io"));
+		System.out.println(es1_9.scan("aless,o"));
+		System.out.println(es1_9.scan("alessi)"));
+		System.out.println(es1_9.scan("eva"));
+		System.out.println(es1_9.scan("andrea"));
+		
+	}
 }
