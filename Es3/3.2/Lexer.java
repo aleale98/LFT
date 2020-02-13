@@ -48,6 +48,7 @@ public class Lexer {
         }
         return valid;
     }
+	
 
     private void readch(BufferedReader br) {
         try {
@@ -104,7 +105,14 @@ public class Lexer {
                 } else if (peek == '*') {
                     /*
                     * Legge la sequenza /*. Dopo legge ogni carattere sino a quando non trova la sequenza
-						di chiusura.
+						di chiusura. Non uso la tecnica che ho usato per implementare il dfa perchè questa
+						mi permette di gestire in modo più semplice il "leggo qualsiasi cosa"
+						Ho riconosciuto la sottosequenza / * 
+						Se riconosco un * incremento commentEnded portandolo a 1
+						Se poi riconosco / incremento ancora commentEnded terminando il ciclo
+						Teoricamente potrei riconoscere anche / all'interno del e in quel caso non faccio nulla
+						se riconosco un * ma dopo non riconosco lo /, decremento commentEnded perchè sicuramente non 
+						ho finito di leggere il commento.
                      */
                     int commentEnded = 0;
                     do {
