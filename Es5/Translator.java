@@ -90,6 +90,8 @@ public class Translator {
                     error("Error in grammar (stat) after read with " + look);
                 break;
 				/*
+					
+					
 					creo le etichette per il caso true e per il caso false. Creo inoltre l'etichetta lnext_l 
 					che uso per indicare la fine del caso else. Non è utilizzata direttamente qui per qualche elaborazione
 					ma serve solo per essere passata come parametro al metodo elseopt e indica il punto a cui saltare 
@@ -107,6 +109,8 @@ public class Translator {
     			break;
 				
 				/*
+					
+					
 					L'idea alla base è che fino a quando l'espressione booleana è vera, torno sempre all'inizio del ciclo.
 					Utilizzo quindi btrue per indicare l'etichetta iniziale del corpo del ciclo.
 				*/
