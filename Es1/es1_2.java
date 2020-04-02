@@ -1,7 +1,7 @@
 public class es1_2 {
     /*
 		Progettare e implementare un DFA che riconosca il linguaggio degli identificatori in un linguaggio in stile Java: 
-		un identificatore e` una sequenza non vuota di lettere, numeri, ed il simbolo di “underscore” _ 
+		un identificatore e' una sequenza non vuota di lettere, numeri, ed il simbolo di "underscore" _ 
 		che non comincia con un numero e che non puo` essere composto solo dal simbolo _. 
 		Compilare e testare il suo funzionamento su un insieme significativo di esempi.
 	*/

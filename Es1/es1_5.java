@@ -32,7 +32,7 @@ public class es1_5 {
                 case 2:
                     if (Character.isDigit(c) && Integer.parseInt(String.valueOf(c)) % 2 == 0) {
                         state = 3;
-                    } else if (Character.isDigit(c) && Integer.parseInt(String.valueOf(c)) % 2 != 0) {
+                    } else if (Character.isDigit(c) && Integer.parseInt(String.valueOf(c)) % 2 == 1) {
                         state = 2;
                     } else {
                         state = -1;
@@ -59,7 +59,7 @@ public class es1_5 {
                 case 5:
                     if (Character.isDigit(c) && Integer.parseInt(String.valueOf(c)) % 2 == 0) {
                         state = 5;
-                    } else if (Character.isDigit(c) && Integer.parseInt(String.valueOf(c)) % 2 != 0) {
+                    } else if (Character.isDigit(c) && Integer.parseInt(String.valueOf(c)) % 2 == 1) {
                         state = 6;
                     } else {
                         state = -1;
@@ -68,7 +68,7 @@ public class es1_5 {
                 case 6:
                     if (Character.isDigit(c) && Integer.parseInt(String.valueOf(c)) % 2 == 0) {
                         state = 5;
-                    } else if (Character.isDigit(c) && Integer.parseInt(String.valueOf(c)) % 2 != 0) {
+                    } else if (Character.isDigit(c) && Integer.parseInt(String.valueOf(c)) % 2 == 1) {
                         state = 6;
                     } else {
                         state = -1;

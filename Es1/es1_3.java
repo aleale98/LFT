@@ -25,7 +25,6 @@ public class es1_3 {
                     }
                     break;
                 case 1:
-				
 					if(Character.isDigit(c) && Integer.parseInt(String.valueOf(c))%2==0){
 						state=1;
 					} else if(Character.isDigit(c) && Integer.parseInt(String.valueOf(c))%2==1){
@@ -48,10 +47,10 @@ public class es1_3 {
                     }
                     break;
                 case 3:
-                    if(!(Character.isLetter(c))){
-                        state=-1;
+                    if((Character.isLetter(c))){
+                        state=3;
                     }else{
-                    	state=3;
+                    	state=-1;
                     }
             }
         }
