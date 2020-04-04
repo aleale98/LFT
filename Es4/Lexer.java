@@ -198,15 +198,16 @@ public class Lexer {
 				o il caso della costante numerica.
 				Se peek è una lettera allora presumibilmente sto gestendo o una parola chiave o un identificatore.
 				Per cui, fino a quando leggo _, lettere o numeri leggo la stringa. Dopodichè la valido con 
-				il metodo apposta.
+				il metodo apposito.
 			*/
-                if (Character.isLetter(peek)) {
+                if (Character.isLetter(peek) || peek == '_') {
                     String id = "";
                     boolean b = true;
                     while (Character.isDigit(peek) || Character.isLetter(peek) || peek == '_') {
                         id += peek;
                         readch(br);
                     }
+					
 					//Rimuovo eventuali spazi letti ad inizio o fine stringa
                     id = id.trim();
                     switch (id) {
@@ -261,21 +262,4 @@ public class Lexer {
                 }
         }
     }
-
-    public static void main(String[] args) {
-        Lexer lex = new Lexer();
-        String path = "/Users/alessio/Desktop/test.txt"; // il percorso del file da leggere
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(path));
-            Token tok;
-            do {
-                tok = lex.lexical_scan(br);
-                System.out.println("Scan: " + tok);
-            } while (tok.tag != Tag.EOF);
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }
