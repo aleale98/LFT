@@ -150,7 +150,7 @@ public class Lexer {
                 return new Token(Tag.EOF);
 
             default:
-                if (Character.isLetter(peek)) {
+                if (Character.isLetter(peek) || peek == '_') {
                     String id = "";
                     boolean b = true;
                     while (Character.isDigit(peek)||Character.isLetter(peek)||peek=='_'){
