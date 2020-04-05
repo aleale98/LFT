@@ -152,12 +152,10 @@ public class Lexer {
             default:
                 if (Character.isLetter(peek) || peek == '_') {
                     String id = "";
-                    boolean b = true;
                     while (Character.isDigit(peek)||Character.isLetter(peek)||peek=='_'){
                         id+=peek;
                         readch(br);
                     }
-                    id = id.trim();
                     switch (id){
                         case "cond":
                             return Word.cond;
@@ -208,7 +206,7 @@ public class Lexer {
 
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "/Users/alessio/Desktop/test.txt"; // il percorso del file da leggere
+        String path = "./test.txt"; // il percorso del file da leggere
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Token tok;

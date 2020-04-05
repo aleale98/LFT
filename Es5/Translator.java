@@ -65,7 +65,6 @@ public class Translator {
         int lnext_false;
         int read_id_addr;
         switch (look.tag) {
-			
             case Tag.READ:
                 match(Tag.READ);
                 if (look.tag == Tag.ID) {
@@ -81,8 +80,6 @@ public class Translator {
                     error("Error in grammar (stat) after read with " + look);
                 break;
 				/*
-					
-					
 					creo le etichette per il caso true e per il caso false. Creo inoltre l'etichetta lnext_end 
 					che uso per indicare la fine del caso else. Non è utilizzata direttamente qui per qualche elaborazione
 					ma serve solo per essere passata come parametro al metodo elseopt e indica il punto a cui saltare 
@@ -348,7 +345,7 @@ public class Translator {
 
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "max_tre_num.lft"; // il percorso del file da leggere
+        String path = "./codice_test.lft"; // il percorso del file da leggere
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Translator translator = new Translator(lex, br);

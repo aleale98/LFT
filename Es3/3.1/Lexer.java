@@ -208,8 +208,6 @@ public class Lexer {
                         readch(br);
                     }
 					
-					//Rimuovo eventuali spazi letti ad inizio o fine stringa
-                    id = id.trim();
                     switch (id) {
                         case "cond":
                             return Word.cond;

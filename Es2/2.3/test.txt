@@ -1,6 +1,6 @@
 /*Ignora tutto questo*/
-(do
-    (read x)
+( do
+    (read x )
     (read y)
     (read z)
 	(read _a_bc_)
