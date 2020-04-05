@@ -1,0 +1,13 @@
+/*Ignora tutto questo*/
+(do
+    (read x)
+    (read y)
+    (read z)
+	(read _a_bc_)
+    (cond (> x y)
+        (cond (> x z) (print x) (else (print z)))
+        (else
+            (cond (> y z) (print y) (else (print z)))
+        )
+    )
+)

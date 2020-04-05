@@ -30,15 +30,11 @@ public class Translator {
         } else error("syntax error");
     }
 
-    /*
-        prog --> {stat.next=newLabel()}stat{emit(stat.next)}EOF
-    */
     public void prog() {
         switch (look.tag) {
             case '(':
                 int lnext_prog = code.newLabel();
                 stat(lnext_prog);
-				System.out.println("LNEXT_PROG "+lnext_prog);
                 code.emitLabel(lnext_prog);
                 match(Tag.EOF);
                 try {
@@ -52,9 +48,6 @@ public class Translator {
         }
     }
 	
-	/*
-		stat --> (statp)
-	*/
     public void stat(int lnext) {
         switch (look.tag) {
             case '(':
@@ -72,9 +65,7 @@ public class Translator {
         int lnext_false;
         int read_id_addr;
         switch (look.tag) {
-			/*
-				statp --> READ ID {emit(istore(&ID))}
-			*/
+			
             case Tag.READ:
                 match(Tag.READ);
                 if (look.tag == Tag.ID) {
@@ -92,7 +83,7 @@ public class Translator {
 				/*
 					
 					
-					creo le etichette per il caso true e per il caso false. Creo inoltre l'etichetta lnext_l 
+					creo le etichette per il caso true e per il caso false. Creo inoltre l'etichetta lnext_end 
 					che uso per indicare la fine del caso else. Non è utilizzata direttamente qui per qualche elaborazione
 					ma serve solo per essere passata come parametro al metodo elseopt e indica il punto a cui saltare 
 					quando ho finito di eseguire il codice dell'else.
@@ -109,8 +100,6 @@ public class Translator {
     			break;
 				
 				/*
-					
-					
 					L'idea alla base è che fino a quando l'espressione booleana è vera, torno sempre all'inizio del ciclo.
 					Utilizzo quindi btrue per indicare l'etichetta iniziale del corpo del ciclo.
 				*/
@@ -126,9 +115,6 @@ public class Translator {
                 code.emit(OpCode.GOto, btrue);
                 code.emitLabel(while_false);
                 break;
-				/*
-					statp --> DO statlist
-				*/
             case Tag.DO:
                 match(Tag.DO);
 				int s_next= code.newLabel();
@@ -165,13 +151,13 @@ public class Translator {
                 error(look.toString());
         }
     }
-	//nuova etichetta per statlistp
+	
     private void statlistp(int lnext) {
         switch (look.tag) {
             case '(':
                 stat(lnext);
-				int new_label=code.newLabel();
-                statlistp(new_label);
+				int next=code.newLabel();
+                statlistp(next);
                 break;
             case ')':
                 break;
@@ -207,17 +193,11 @@ public class Translator {
     private void exprp() {
         char opType = ' ';
         switch (look.tag) {
-			/*
-				exprp --> + exprlist {emit(iadd)}
-			*/
             case '+':
                 match('+');
                 opType = '+';
                 exprlist(opType);
                 break;
-				/*
-					exprp --> -expr expr {emit(isub)}
-				*/
             case '-':
                 match('-');
                 expr();
@@ -353,13 +333,8 @@ public class Translator {
                 match('(');
 				match(Tag.ELSE);
                 code.emit(OpCode.GOto, end);
-				 code.emitLabel(lnext_false);
-				
-				System.out.println("LNEXT_FALSE "+lnext_false);
-               
-				System.out.println("END "+end);
+				code.emitLabel(lnext_false);
                 stat(end);
-				System.out.println("STO EMETTENDO END");
                 code.emitLabel(end);
                 match(')');
                 break;
@@ -373,7 +348,7 @@ public class Translator {
 
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "/Users/alessio/Desktop/test.txt"; // il percorso del file da leggere
+        String path = "max_tre_num.lft"; // il percorso del file da leggere
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Translator translator = new Translator(lex, br);

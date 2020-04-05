@@ -138,7 +138,7 @@ public class Valutatore {
 
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "/Users/alessio/Desktop/test.txt"; // il percorso del file da leggere
+        String path = "./test.txt"; // il percorso del file da leggere
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Valutatore valutatore = new Valutatore(lex, br);
